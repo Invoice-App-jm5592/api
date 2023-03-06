@@ -2,27 +2,24 @@
 
 namespace App\Entity;
 
-use App\Repository\AppUserRepository;
+use App\Repository\ClientRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: AppUserRepository::class)]
-class AppUser
+#[ORM\Entity(repositoryClass: ClientRepository::class)]
+class Client
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 50)]
+    #[ORM\Column(length: 100)]
     private ?string $name = null;
 
     #[ORM\Column(length: 50)]
     private ?string $email = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $password = null;
 
     #[ORM\Column(length: 100)]
     private ?string $address = null;
@@ -36,15 +33,18 @@ class AppUser
     #[ORM\Column(length: 50)]
     private ?string $country = null;
 
-    #[ORM\OneToMany(mappedBy: 'user_id', targetEntity: Client::class)]
-    private Collection $clients;
+    #[ORM\Column(length: 50, nullable: true)]
+    private ?string $phone = null;
 
-    #[ORM\OneToMany(mappedBy: 'user_id', targetEntity: Invoice::class)]
+    #[ORM\ManyToOne(inversedBy: 'clients')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?AppUser $user_id = null;
+
+    #[ORM\OneToMany(mappedBy: 'client_id', targetEntity: Invoice::class)]
     private Collection $invoices;
 
     public function __construct()
     {
-        $this->clients = new ArrayCollection();
         $this->invoices = new ArrayCollection();
     }
 
@@ -73,18 +73,6 @@ class AppUser
     public function setEmail(string $email): self
     {
         $this->email = $email;
-
-        return $this;
-    }
-
-    public function getPassword(): ?string
-    {
-        return $this->password;
-    }
-
-    public function setPassword(string $password): self
-    {
-        $this->password = $password;
 
         return $this;
     }
@@ -137,32 +125,26 @@ class AppUser
         return $this;
     }
 
-    /**
-     * @return Collection<int, Client>
-     */
-    public function getClients(): Collection
+    public function getPhone(): ?string
     {
-        return $this->clients;
+        return $this->phone;
     }
 
-    public function addClient(Client $client): self
+    public function setPhone(?string $phone): self
     {
-        if (!$this->clients->contains($client)) {
-            $this->clients->add($client);
-            $client->setUserId($this);
-        }
+        $this->phone = $phone;
 
         return $this;
     }
 
-    public function removeClient(Client $client): self
+    public function getUserId(): ?AppUser
     {
-        if ($this->clients->removeElement($client)) {
-            // set the owning side to null (unless already changed)
-            if ($client->getUserId() === $this) {
-                $client->setUserId(null);
-            }
-        }
+        return $this->user_id;
+    }
+
+    public function setUserId(?AppUser $user_id): self
+    {
+        $this->user_id = $user_id;
 
         return $this;
     }
@@ -179,7 +161,7 @@ class AppUser
     {
         if (!$this->invoices->contains($invoice)) {
             $this->invoices->add($invoice);
-            $invoice->setUserId($this);
+            $invoice->setClientId($this);
         }
 
         return $this;
@@ -189,8 +171,8 @@ class AppUser
     {
         if ($this->invoices->removeElement($invoice)) {
             // set the owning side to null (unless already changed)
-            if ($invoice->getUserId() === $this) {
-                $invoice->setUserId(null);
+            if ($invoice->getClientId() === $this) {
+                $invoice->setClientId(null);
             }
         }
 
