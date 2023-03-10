@@ -25,8 +25,8 @@ class AppUserFixtures extends Fixture
         $manager->persist($appUser);
 
         $client = new Client();
-        $client->setName('Jason Vorhees');
-        $client->setEmail('jasonv@example.com');
+        $client->setName('Dr. Martin Trankovic');
+        $client->setEmail('docmarting@example.com');
         $client->setAddress('Some-Client-Street 334');
         $client->setCityCode('123456');
         $client->setCity('Any City');
@@ -45,7 +45,7 @@ class AppUserFixtures extends Fixture
         $invoice->setNumberInt(2300);
         $invoice->setUserId($appUser);
         $invoice->setClientId($client);
-        $invoice->setStatus('DRAFT');
+        $invoice->setStatus('PENDING');
         $invoice->setIssueDate(new DateTime());
         $invoice->setPaymentTerms('Next 30 days');
         $invoice->setLineItems([
@@ -60,10 +60,16 @@ class AppUserFixtures extends Fixture
                 'quantity' => 9,
                 'price' => 840,
                 'total' => 7560
+            ],
+            [
+                'name' => 'App Development',
+                'quantity' => 1,
+                'price' => 20000,
+                'total' => 20000
             ]
         ]);
-        $invoice->setDescription('Graphic Design for Mobile App');
-        $invoice->setTotalAmount(7760);
+        $invoice->setDescription('Design & Development of Mobile App');
+        $invoice->setTotalAmount(27760);
         $manager->persist($invoice);
 
         $manager->flush();

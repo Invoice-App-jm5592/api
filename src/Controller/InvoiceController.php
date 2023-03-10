@@ -13,7 +13,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class InvoiceController extends AbstractController
 {
     // TODO: Change later when implementing authentication
-    const USER_ID = 7;
+    const USER_ID = 8;
 
     private InvoiceService $invoiceService;
 
@@ -22,7 +22,7 @@ class InvoiceController extends AbstractController
         $this->invoiceService = $invoiceService;
     }
 
-    #[Route('/invoices', name: 'all_invoices', methods: ['GET'])]
+    #[Route('api/invoices', name: 'all_invoices', methods: ['GET'])]
     public function getAllInvoices(EntityManagerInterface $entityManager, Request $request): JsonResponse
     {
         // Filter Invoices by 'status'
@@ -42,7 +42,7 @@ class InvoiceController extends AbstractController
         ]);
     }
 
-    #[Route('invoices/{id}', name: 'invoice_details', methods: ['GET'])]
+    #[Route('api/invoices/{id}', name: 'invoice_details', methods: ['GET'])]
     public function getInvoiceById(EntityManagerInterface $entityManager, string $id): JsonResponse
     {
         if (!ctype_digit($id)) {
