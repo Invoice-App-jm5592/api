@@ -36,11 +36,14 @@ class AppUser
     #[ORM\Column(length: 50)]
     private ?string $country = null;
 
-    #[ORM\OneToMany(mappedBy: 'user_id', targetEntity: Client::class)]
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Client::class)]
     private Collection $clients;
 
-    #[ORM\OneToMany(mappedBy: 'user_id', targetEntity: Invoice::class)]
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Invoice::class)]
     private Collection $invoices;
+
+    #[ORM\Column(length: 50, nullable: true)]
+    private ?string $phone = null;
 
     public function __construct()
     {
@@ -193,6 +196,18 @@ class AppUser
                 $invoice->setUserId(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getPhone(): ?string
+    {
+        return $this->phone;
+    }
+
+    public function setPhone(?string $phone): self
+    {
+        $this->phone = $phone;
 
         return $this;
     }

@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Invoice;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -37,6 +38,23 @@ class InvoiceRepository extends ServiceEntityRepository
         if ($flush) {
             $this->getEntityManager()->flush();
         }
+    }
+
+    public function findByStatusAndUserId(string $status, int $userId): ArrayCollection
+    {
+        $qb = $this->createQueryBuilder('i')
+            ->leftJoin('i.user', 'u')
+            ->leftJoin('i.client', 'c')
+            ->where('i.status = :status')
+            ->andWhere('u.id = :userId')
+            ->setParameters([
+                'status' => $status,
+                'userId' => $userId
+            ]);
+
+        $query = $qb->getQuery();
+
+        return new ArrayCollection($query->getResult());
     }
 
 //    /**

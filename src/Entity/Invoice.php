@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\InvoiceRepository;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping as ORM;
@@ -62,13 +63,6 @@ class Invoice
         $this->number_prefix = $number_prefix;
 
         return $this;
-    }
-
-    public static function getNextInvoiceNumber(EntityManagerInterface $entityManager): int
-    {
-        $query = $entityManager->createQuery('SELECT MAX(i.invoiceNumber) FROM App\Entity\Invoice i');
-        $maxInvoiceNumber = $query->getSingleScalarResult();
-        return $maxInvoiceNumber + 1;
     }
 
     public function getNumberInt(): ?int
