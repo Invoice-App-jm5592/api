@@ -47,7 +47,7 @@ class InvoiceUtils
                     'code' => $invoice->getClientId()->getCityCode(),
                     'country' => $invoice->getClientId()->getCountry()
                 ],
-                'issue_date' => $invoice->getIssueDate(),
+                'issue_date' => $invoice->getIssueDate()->format('d.m.Y'),
                 'payment_terms' => $invoice->getPaymentTerms(),
                 'description' => $invoice->getDescription(),
                 'items' => $invoice->getLineItems(),

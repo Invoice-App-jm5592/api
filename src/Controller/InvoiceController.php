@@ -31,14 +31,14 @@ class InvoiceController extends AbstractController
             $status = $request->query->get('status');
             $response = $this->invoiceService->getInvoicesByStatus($entityManager, self::USER_ID, strtoupper($status));
             return $this->json([
-                'data' => $response
+                'invoices' => $response
             ]);
         }
 
         // Return all invoices
         $response = $this->invoiceService->getAllInvoices($entityManager, self::USER_ID);
         return $this->json([
-            'data' => $response
+            'invoices' => $response
         ]);
     }
 
@@ -53,7 +53,7 @@ class InvoiceController extends AbstractController
 
         $response = $this->invoiceService->getInvoiceById($entityManager, self::USER_ID, intval($id));
         return $this->json([
-            'data' => $response
+            'invoice' => $response
         ]);
     }
 }
