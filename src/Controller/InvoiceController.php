@@ -45,10 +45,11 @@ class InvoiceController extends AbstractController
     }
 
     #[Route('invoices/{id}', name: 'invoice_details', methods: ['GET'])]
-    public function getInvoiceById(string $id): JsonResponse
+    public function getInvoiceById(EntityManagerInterface $entityManager, string $id): JsonResponse
     {
+        $response = $this->invoiceService->getInvoiceById($entityManager, self::USER_ID, intval($id));
         return $this->json([
-            'data' => 'Individual Invoice with ID: ' . $id
+            'data' => $response
         ]);
     }
 }

@@ -57,6 +57,23 @@ class InvoiceRepository extends ServiceEntityRepository
         return new ArrayCollection($query->getResult());
     }
 
+    public function findByIdAndUserId(int $id, int $userId): ArrayCollection
+    {
+        $qb = $this->createQueryBuilder('i')
+            ->leftJoin('i.user', 'u')
+            ->leftJoin('i.client', 'c')
+            ->where('i.id = :id')
+            ->andWhere('u.id = :userId')
+            ->setParameters([
+                'id' => $id,
+                'userId' => $userId
+            ]);
+
+        $query = $qb->getQuery();
+
+        return new ArrayCollection($query->getResult());
+    }
+
 //    /**
 //     * @return Invoice[] Returns an array of Invoice objects
 //     */

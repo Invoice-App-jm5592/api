@@ -34,4 +34,23 @@ class InvoiceService
         $invoices = $invoiceRepository->findByStatusAndUserId(strtoupper($status), $userId);
         return InvoiceUtils::transformCollectionToArray($invoices);
     }
+
+    /**
+     * @param EntityManagerInterface $entityManager
+     * @param int $userId
+     * @param int $invoiceId
+     * @return array|null
+     */
+    public function getInvoiceById(EntityManagerInterface $entityManager, int $userId, int $invoiceId): ?array
+    {
+        $invoiceRepository = $entityManager->getRepository(Invoice::class);
+        $invoice = $invoiceRepository->findByIdAndUserId($invoiceId, $userId);
+        $result = InvoiceUtils::transformCollectionToArray($invoice);
+
+        if (!is_array($result) || empty($result)) {
+            return null;
+        }
+
+        return $result[0];
+    }
 }
